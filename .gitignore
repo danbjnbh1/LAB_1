@@ -1,10 +1,10 @@
 # Build artifacts
 build/
 bin/
-encoder
+count-words
 
 # Dev Container (not used)
 .devcontainer/
 
 # macOS
-.DS_Storeencoder
+.DS_Store

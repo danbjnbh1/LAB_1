@@ -1,43 +1,16 @@
-all: bin build bin/main bin/my_echo encoder
+# Makefile for count-words program (Task 0)
 
-# Create bin directory
-bin:
-	mkdir -p bin
+CC = gcc
+CFLAGS = -m32 -g -Wall -Wextra
+TARGET = count-words
 
-# Create build directory
-build:
-	mkdir -p build
+all: $(TARGET)
 
-# Link main executable to bin/
-bin/main: build/main.o build/numbers.o build/add.o
-	gcc -g -m32 -Wall -o bin/main build/main.o build/numbers.o build/add.o
-
-# Link my_echo executable to bin/
-bin/my_echo: build/my_echo.o
-	gcc -g -m32 -Wall -o bin/my_echo build/my_echo.o
-
-# Link encoder executable (in root)
-encoder: build/encoder.o
-	gcc -g -m32 -Wall -o encoder build/encoder.o
-
-# Compile C files to build directory
-build/main.o: main.c
-	gcc -g -m32 -Wall -c main.c -o build/main.o
-
-build/numbers.o: numbers.c
-	gcc -g -m32 -Wall -c numbers.c -o build/numbers.o
-
-build/my_echo.o: my_echo.c
-	gcc -g -m32 -Wall -c my_echo.c -o build/my_echo.o
-
-build/encoder.o: encoder.c
-	gcc -g -m32 -Wall -c encoder.c -o build/encoder.o
-
-# Assemble assembly file to build directory
-build/add.o: add.s
-	nasm -g -f elf -w+all -o build/add.o add.s
+$(TARGET): count-words.c
+	$(CC) $(CFLAGS) -o $(TARGET) count-words.c
 
 clean:
-	rm -rf build bin encoder
+	rm -f $(TARGET)
 
 .PHONY: all clean
+
