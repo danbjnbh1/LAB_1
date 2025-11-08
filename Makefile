@@ -22,6 +22,6 @@ base: build/base.o
 	gcc -m32 -g -O0 -Wall -Wextra -o base build/base.o
 
 clean:
-	rm -f count-words addresses build/*.o
+	rm -f base count-words addresses build/*.o 
 
 .PHONY: all clean
