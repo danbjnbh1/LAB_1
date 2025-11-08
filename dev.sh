@@ -1,17 +1,13 @@
 #!/bin/bash
-# Dev environment launcher for Lab A
+# Minimal dev launcher for Lab 1 (gcc -m32 + gdb)
+set -e
 
-# Build image if not exists
-if ! docker images | grep -q "^lab-a "; then
-    echo "🔨 Building Docker image..."
-    docker build --platform linux/386 -t lab-a -f dockerfile .
-fi
+docker build --platform linux/amd64 -t lab-1 -f dockerfile .
 
-# Run container
-echo "🚀 Starting Linux x86 environment..."
-docker run --platform linux/386 -it --rm \
-    -v "$(pwd):/lab" \
-    -w /lab \
-    lab-a \
-    bash
-
+docker run --platform linux/amd64 -it --rm \
+  --cap-add=SYS_PTRACE \
+  --security-opt seccomp=unconfined \
+  -v "$(pwd):/lab" \
+  -w /lab \
+  lab-1 \
+  bash

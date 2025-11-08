@@ -1,18 +1,17 @@
-FROM --platform=linux/i386 i386/ubuntu:20.04
+FROM --platform=linux/amd64 ubuntu:20.04
 
-# Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required tools
-RUN apt-get update && apt-get install -y \
-    gcc \
-    gcc-multilib \
-    nasm \
-    make \
+# 32-bit toolchain on amd64
+RUN dpkg --add-architecture i386 && \
+    apt-get update && apt-get install -y \
+      gcc \
+      g++ \
+      gcc-multilib \
+      g++-multilib \
+      libc6-dev-i386 \
+      make \
+      gdb \
     && rm -rf /var/lib/apt/lists/*
 
-# Create working directory
 WORKDIR /lab
-
-# Keep container running
-CMD ["sleep", "infinity"]
