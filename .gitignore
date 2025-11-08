@@ -4,6 +4,7 @@ bin/
 count-words
 addresses
 base
+menu_map
 
 
 # Dev Container (not used)
