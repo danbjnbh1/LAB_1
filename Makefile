@@ -1,16 +1,21 @@
-# Makefile for count-words program (Task 0)
+all: count-words addresses
 
-CC = gcc
-CFLAGS = -m32 -g -Wall -Wextra
-TARGET = count-words
+build:
+	mkdir -p build
 
-all: $(TARGET)
+build/count-words.o: count-words.c | build
+	gcc -m32 -g -O0 -Wall -Wextra -c count-words.c -o build/count-words.o
 
-$(TARGET): count-words.c
-	$(CC) $(CFLAGS) -o $(TARGET) count-words.c
+build/addresses.o: addresses.c | build
+	gcc -m32 -g -O0 -Wall -Wextra -c addresses.c -o build/addresses.o
+
+count-words: build/count-words.o
+	gcc -m32 -g -O0 -Wall -Wextra -o count-words build/count-words.o
+
+addresses: build/addresses.o
+	gcc -m32 -g -O0 -Wall -Wextra -o addresses build/addresses.o
 
 clean:
-	rm -f $(TARGET)
+	rm -f count-words addresses build/*.o
 
 .PHONY: all clean
-

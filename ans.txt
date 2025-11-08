@@ -1,0 +1,46 @@
+T1a
+- Build/run:
+  gcc -m32 -g -O0 -Wall -Wextra -o addresses addresses.c && ./addresses
+
+- Locations (examples from addresses.c):
+  code/text:        &foo, &foo1, &foo2
+  data/BSS:         &addr5, &addr6, static &addr0, static &addr1, global &g
+  read-only data:   yos (string literal "ree")
+  heap:             addr4 (result of malloc)
+  stack:            &addr2, &addr3, local in point_at, &argc, &argv
+
+- Address order (typical on Linux with ASLR):
+  code < data/BSS < heap (grows upward) … stack (high addresses, grows downward).
+  Absolute values vary between runs, relative regions obey this order.
+
+- sizeof(long) and pointer diffs (with -m32):
+  sizeof(long) = 4, sizeof(void*) = 4 → long is sufficient for address differences.
+  (In general, prefer ptrdiff_t/intptr_t/size_t for portability.)
+
+T1b
+ '+' on a pointer advances by element size:
+iarray+1: +4 bytes (int)
+farray+1: +4 bytes (float)
+darray+1: +8 bytes (double)
+carray+1: +1 byte (char)
+Memory layout of arrays:
+Elements are stored contiguously in memory (no gaps within an array).
+These arrays are local, so they live on the stack.
+The compiler may place different arrays with gaps between them due to alignment (e.g., double aligned to 8 bytes), which explains jumps like from ...44 to ...58.
+
+T1c
+The three distances compare where different objects live relative to p (passed as &addr5):
+dist1 = (size_t)&addr6 − (size_t)p: distance between two globals/statics (data/BSS). Small delta → both in data segment.
+dist2 = (size_t)&local − (size_t)p: distance from data to a stack local. Large delta, often positive (stack at higher addrs) → shows stack is in a different region and grows downward.
+dist3 = (size_t)&foo − (size_t)p: distance from data to code (text). Large delta, typically negative (code at lower addrs) → shows code segment is separate.
+Purpose: illustrate process memory layout (code/text, data/BSS, stack) and relative ordering. Sign/magnitude of the deltas show which segment is above/below and how far.
+Casting to size_t makes the subtraction a byte distance; you can’t subtract void* directly.
+
+T1d
+Pointer indexing and pointer increment both read the same array values.
+The uninitialized pointer shows a garbage address; don’t dereference it.
+
+T1e
+&argc and &argv live on the stack (locals in main’s frame).
+argv points to a contiguous array of pointers on the stack (&argv[i] increases by pointer size).
+Each argv[i] points to a null-terminated string placed by the OS on the initial stack region at process start

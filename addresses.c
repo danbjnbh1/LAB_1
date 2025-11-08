@@ -20,20 +20,20 @@ int secondary(int x)
     int addr3;
     char *yos = "ree";
     int *addr4 = (int *)(malloc(50));
-	int iarray[3];
+    int iarray[3];
     float farray[3];
     double darray[3];
-    char carray[3]; 
-	int iarray2[] = {1,2,3};
-    char carray2[] = {'a','b','c'};
-    int* iarray2Ptr;
-    char* carray2Ptr; 
-    
-	printf("- &addr2: %p\n", &addr2);
+    char carray[3];
+    int iarray2[] = {1, 2, 3};
+    char carray2[] = {'a', 'b', 'c'};
+    int *iarray2Ptr;
+    char *carray2Ptr;
+
+    printf("- &addr2: %p\n", &addr2);
     printf("- &addr3: %p\n", &addr3);
     printf("- foo: %p\n", &foo);
     printf("- &addr5: %p\n", &addr5);
-	printf("Print distances:\n");
+    printf("Print distances:\n");
     point_at(&addr5);
 
     printf("Print more addresses:\n");
@@ -45,36 +45,84 @@ int secondary(int x)
 
     printf("- &foo1: %p\n", &foo1);
     printf("- &foo1: %p\n", &foo2);
-    
-    printf("Print another distance:\n");
-    printf("- &foo2 - &foo1: %ld\n", (long) (&foo2 - &foo1));
 
-   
+    printf("Print another distance:\n");
+    printf("- &foo2 - &foo1: %ld\n", (long)(&foo2 - &foo1));
+
     printf("Arrays Mem Layout (T1b):\n");
 
     /* task 1 b here */
-    
+    printf("- iarray:   %p\n", (void *)iarray);
+    printf("- iarray+1: %p\n", (void *)(iarray + 1));
+
+    printf("- farray:   %p\n", (void *)farray);
+    printf("- farray+1: %p\n", (void *)(farray + 1));
+
+    printf("- darray:   %p\n", (void *)darray);
+    printf("- darray+1: %p\n", (void *)(darray + 1));
+
+    printf("- carray:   %p\n", (void *)carray);
+    printf("- carray+1: %p\n", (void *)(carray + 1));
+
     printf("Pointers and arrays (T1d): ");
 
     /* task 1 d here */
-    
+    // initialize the pointers to the first cell of the arrays
+    iarray2Ptr = iarray2;
+    carray2Ptr = carray2;
 
+    // print the values of the arrays via pointers (by index)
+    printf("\nT1d (indexing via pointers):\n");
+    for (int i = 0; i < 3; i++)
+    {
+        printf("- iarray2[%d] via *(iarray2Ptr+%d) = %d\n", i, i, *(iarray2Ptr + i));
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        printf("- carray2[%d] via *(carray2Ptr+%d) = %c\n", i, i, *(carray2Ptr + i));
+    }
+
+    // print the values of the arrays via pointers (by increment)
+    printf("\nT1d (increment pointers):\n");
+    int *ip = iarray2Ptr;
+    char *cp = carray2Ptr;
+    for (int i = 0; i < 3; i++, ip++)
+    {
+        printf("- *(ip) = %d\n", *ip);
+    }
+    for (int i = 0; i < 3; i++, cp++)
+    {
+        printf("- *(cp) = %c\n", *cp);
+    }
+
+    // uninitialized pointer - print the value of the pointer
+    int *p;
+    printf("\nT1d (uninitialized pointer):\n");
+    printf("- p (garbage address): %p\n", (void *)p);
 }
 
 int main(int argc, char **argv)
-{ 
+{
 
     printf("Print function argument addresses:\n");
 
     printf("- &argc %p\n", &argc);
     printf("- argv %p\n", argv);
     printf("- &argv %p\n", &argv);
-	
-	secondary(0);
-    
+
+    secondary(0);
+
     printf("Command line arg addresses (T1e):\n");
     /* task 1 e here */
-    
+    printf("- &argc: %p\n", (void *)&argc);
+    printf("- argv:  %p\n", (void *)argv);
+    printf("- &argv: %p\n", (void *)&argv);
+    for (int i = 0; i < argc; i++)
+    {
+        printf("  i=%d: &argv[i]=%p  argv[i]=%p  string=\"%s\"\n",
+               i, (void *)&argv[i], (void *)argv[i], argv[i]);
+    }
+
     return 0;
 }
 
@@ -91,9 +139,12 @@ void point_at(void *p)
     printf("- dist1: (size_t)&addr6 - (size_t)p: %ld\n", dist1);
     printf("- dist2: (size_t)&local - (size_t)p: %ld\n", dist2);
     printf("- dist3: (size_t)&foo - (size_t)p:  %ld\n", dist3);
-    
+
     printf("Check long type mem size (T1a):\n");
-    /* part of task 1 a here */
+    printf("- sizeof(long)   = %zu\n", sizeof(long));
+    printf("- sizeof(void*)  = %zu\n", sizeof(void *));
+    printf("- long %s for pointer diffs on this arch\n",
+           (sizeof(long) >= sizeof(void *)) ? "is enough" : "is NOT enough");
 
     printf("- addr0: %p\n", &addr0);
     printf("- addr1: %p\n", &addr1);
