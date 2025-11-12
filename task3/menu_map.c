@@ -68,15 +68,14 @@ int main(void) {
         for (int i = 0; i < menu_len; i++)
             printf("%d) %s\n", i, menu[i].name);
         printf("Option: ");
-        if (!fgets(line, sizeof(line), stdin)) break;  // EOF -> exit
+        if (!fgets(line, sizeof(line), stdin)) break; 
 
         char *end = NULL;
         long choice = strtol(line, &end, 10);
         if (end == line || choice < 0 || choice >= menu_len) {
-            printf("Not within bounds\n");
+            printf("Outside ranges\n");
             break;
         }
-        printf("Within bounds\n");
 
         char* new_arr = map(carray, base_len, menu[choice].fun);
         if (!new_arr) { free(carray); return 1; }
